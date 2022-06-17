@@ -37,6 +37,7 @@ namespace EuphoriaApi.OutboundCallHistory {
                 request += "<extension>" + extension + "</extension>";
 
             XmlDocument xmlDoc = await client.PostXML(request);
+            client.ThrowIfError(xmlDoc);
 
             return Convert(xmlDoc);
         }

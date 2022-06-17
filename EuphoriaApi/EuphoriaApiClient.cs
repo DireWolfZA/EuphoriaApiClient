@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -59,6 +60,15 @@ namespace EuphoriaApi {
             };
             xmlDocument.LoadXml(rtn);
             return xmlDocument;
+        }
+
+        public void ThrowIfError(XmlDocument xmlDocument) {
+            var nodes = xmlDocument.DocumentElement.ChildNodes.Cast<XmlNode>();
+            XmlNode statusNode = nodes.FirstOrDefault(n => n.Name == "Status");
+            XmlNode errorNode = nodes.FirstOrDefault(n => n.Name == "Error");
+            if (statusNode != null || errorNode != null) {
+                throw new XmlException($"{statusNode?.InnerXml}: {errorNode?.InnerXml}");
+            }
         }
     }
 }
