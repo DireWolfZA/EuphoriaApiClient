@@ -13,7 +13,7 @@ namespace EuphoriaApi.OutboundCallHistory {
         /// <param name="startDate">Start Date</param>
         /// <param name="endDate">End Date</param>
         /// <param name="extension">Extension number</param>
-        Task<List<OutboundCall>> GetAsync(int pageSize, int startAt, bool onlyAnswered, DateTime startDate, DateTime? endDate = null, int? extension = null);
+        Task<List<OutboundCall>> GetAsync(int pageSize, int startAt, bool? onlyAnswered = null, DateTime? startDate = null, DateTime? endDate = null, int? extension = null);
     }
 
     public class OutboundCallHistoryActions : IOutboundCallHistoryActions {
@@ -22,17 +22,19 @@ namespace EuphoriaApi.OutboundCallHistory {
             this.client = client;
         }
 
-        public async Task<List<OutboundCall>> GetAsync(int pageSize, int startAt, bool onlyAnswered, DateTime startDate, DateTime? endDate = null, int? extension = null) {
-            string request = "<ActionName>GetOutboundCallingHistory</ActionName>\n" +
-                    "<pageSize>" + pageSize + "</pageSize>\n" +
-                    "<startAt>" + startAt + "</startAt>\n" +
-                    "<OnlyAnswered>" + (onlyAnswered ? "yes" : "no") + "</OnlyAnswered>\n" +
-                    "<startDate>" + startDate.ToString("yyyy-MM-dd") + "</startDate>\n";
+        public async Task<List<OutboundCall>> GetAsync(int pageSize, int startAt, bool? onlyAnswered = null, DateTime? startDate = null, DateTime? endDate = null, int? extension = null) {
+            string request = "<ActionName>GetOutboundCallingHistory</ActionName>" +
+                    "<pageSize>" + pageSize + "</pageSize>" +
+                    "<startAt>" + startAt + "</startAt>";
 
+            if (onlyAnswered != null)
+                request += "<OnlyAnswered>" + (onlyAnswered.Value ? "yes" : "no") + "</OnlyAnswered>";
+            if (startDate != null)
+                request += "<startDate>" + startDate.Value.ToString("yyyy-MM-dd") + "</startDate>";
             if (endDate != null)
-                request += "<endDate>" + endDate.Value.ToString("yyyy-MM-dd") + "</endDate>\n";
+                request += "<endDate>" + endDate.Value.ToString("yyyy-MM-dd") + "</endDate>";
             if (extension != null)
-                request += "<extension>" + extension + "</extension>\n";
+                request += "<extension>" + extension + "</extension>";
 
             XmlDocument xmlDoc = await client.PostXML(request);
 

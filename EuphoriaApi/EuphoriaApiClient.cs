@@ -28,14 +28,9 @@ namespace EuphoriaApi {
         public IOutboundCallHistoryActions OutboundCallHistory => new OutboundCallHistoryActions(this);
 
         public async Task<XmlDocument> PostXML(string requestXML) {
-            requestXML = "<?xml version='1.0' encoding='utf-8'?>\n" +
-                         "<XML>\n" +
-                            "<Tenant>\n\t" +
-                                "<Name>" + _tenantName + "</Name>\n\t" +
-                                "<Auth>" + _authCode + "</Auth>\n" +
-                            "</Tenant>\n" +
-                            requestXML +
-                         "</XML>";
+            requestXML = "<?xml version='1.0' encoding='utf-8'?>" +
+                         $"<XML><Tenant><Name>{_tenantName}</Name><Auth>{_authCode}</Auth></Tenant>" +
+                         requestXML + "</XML>";
             string requestString = _baseUrl + _apiUrl;
             string rtn;
             byte[] bytes = Encoding.ASCII.GetBytes(requestXML);
