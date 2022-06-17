@@ -15,4 +15,54 @@ namespace EuphoriaApi.OutboundCallHistory {
         /// <param name="extension">Extension number</param>
         Task<List<OutboundCall>> GetAsync(int pageSize, int startAt, bool onlyAnswered, DateTime startDate, DateTime? endDate = null, int? extension = null);
     }
+
+    public class OutboundCallHistoryActions : IOutboundCallHistoryActions {
+        private readonly IEuphoriaApiClient client;
+        public OutboundCallHistoryActions(IEuphoriaApiClient client) {
+            this.client = client;
+        }
+
+        public async Task<List<OutboundCall>> GetAsync(int pageSize, int startAt, bool onlyAnswered, DateTime startDate, DateTime? endDate = null, int? extension = null) {
+            string request = "<ActionName>GetOutboundCallingHistory</ActionName>\n" +
+                    "<pageSize>" + pageSize + "</pageSize>\n" +
+                    "<startAt>" + startAt + "</startAt>\n" +
+                    "<OnlyAnswered>" + (onlyAnswered ? "yes" : "no") + "</OnlyAnswered>\n" +
+                    "<startDate>" + startDate.ToString("yyyy-MM-dd") + "</startDate>\n";
+
+            if (endDate != null)
+                request += "<endDate>" + endDate.Value.ToString("yyyy-MM-dd") + "</endDate>\n";
+            if (extension != null)
+                request += "<extension>" + extension + "</extension>\n";
+
+            XmlDocument xmlDoc = await client.PostXML(request);
+
+            return Convert(xmlDoc);
+        }
+
+        private List<OutboundCall> Convert(XmlDocument responseXML) {
+            var outboundCalls = new List<OutboundCall>();
+
+            XmlNode documentElement = responseXML.DocumentElement;
+            if (documentElement.HasChildNodes) {
+                XmlNodeList childNodes = documentElement.ChildNodes;
+                foreach (XmlNode childNode in childNodes) {
+                    var outboundCall = new OutboundCall {
+                        UniqueID = childNode.SelectSingleNode("uID").InnerText.Trim(),
+                        Extension = childNode.SelectSingleNode("Extension").InnerText.Trim(),
+                        ExtensionName = childNode.SelectSingleNode("ExtensionName").InnerText.Trim(),
+                        Duration = childNode.SelectSingleNode("Duration").InnerText.Trim(),
+                        DialledNumber = childNode.SelectSingleNode("DialedNumber").InnerText.Trim(),
+                        StartTime = childNode.SelectSingleNode("StartTime").InnerText.Trim(),
+                        Status = childNode.SelectSingleNode("Status").InnerText.Trim(),
+                        StatusDescription = childNode.SelectSingleNode("StatusDescription").InnerText.Trim(),
+                        CallBill = childNode.SelectSingleNode("CallBill").InnerText.Trim()
+                    };
+
+                    outboundCalls.Add(outboundCall);
+                }
+            }
+
+            return outboundCalls;
+        }
+    }
 }
