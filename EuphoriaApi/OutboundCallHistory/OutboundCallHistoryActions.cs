@@ -49,7 +49,7 @@ namespace EuphoriaApi.OutboundCallHistory {
             if (documentElement.HasChildNodes) {
                 XmlNodeList childNodes = documentElement.ChildNodes;
                 foreach (XmlNode childNode in childNodes) {
-                    var outboundCall = new OutboundCall {
+                    var outboundCall = new OutboundCall() {
                         UniqueID = childNode.SelectSingleNode("uID").InnerText.Trim(),
                         Extension = childNode.SelectSingleNode("Extension").InnerText.Trim(),
                         ExtensionName = childNode.SelectSingleNode("ExtensionName").InnerText.Trim(),

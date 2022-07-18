@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
+using EuphoriaApi.Contacts;
 using EuphoriaApi.OutboundCallHistory;
 
 namespace EuphoriaApi {
@@ -27,6 +28,7 @@ namespace EuphoriaApi {
         }
 
         public IOutboundCallHistoryActions OutboundCallHistory => new OutboundCallHistoryActions(this);
+        public IContactActions Contacts => new ContactActions(this);
 
         public async Task<XmlDocument> PostXML(string requestXML) {
             requestXML = "<?xml version='1.0' encoding='utf-8'?>" +

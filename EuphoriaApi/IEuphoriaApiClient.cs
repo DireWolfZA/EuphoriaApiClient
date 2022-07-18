@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using System.Xml;
+using EuphoriaApi.Contacts;
 using EuphoriaApi.OutboundCallHistory;
 
 namespace EuphoriaApi {
@@ -8,5 +9,6 @@ namespace EuphoriaApi {
         void ThrowIfError(XmlDocument xmlDocument);
 
         IOutboundCallHistoryActions OutboundCallHistory { get; }
+        IContactActions Contacts { get; }
     }
 }
