@@ -65,16 +65,16 @@ namespace EuphoriaApi.Contacts {
             string request = "<ActionName>AddContact</ActionName>" +
                     "<TmsUsername>" + tmsUsername + "</TmsUsername>" +
                     "<TmsPassword>" + tmsPassword + "</TmsPassword>" +
-                    "<ContactName>" + contact.ContactName + "</ContactName>" +
-                    "<ContactCompany>" + contact.ContactCompany + "</ContactCompany>" +
-                    "<ContactNum1>" + contact.ContactNumber1 + "</ContactNum1>";
+                    "<ContactName><![CDATA[" + contact.ContactName + "]]></ContactName>" +
+                    "<ContactCompany><![CDATA[" + contact.ContactCompany + "]]></ContactCompany>" +
+                    "<ContactNum1><![CDATA[" + contact.ContactNumber1 + "]]></ContactNum1>";
 
             if (contact.ContactNumber2 != null)
-                request += "<ContactNum2>" + contact.ContactNumber2 + "</ContactNum2>";
+                request += "<ContactNum2><![CDATA[" + contact.ContactNumber2 + "]]></ContactNum2>";
             if (contact.ContactNumber3 != null)
-                request += "<ContactNum2>" + contact.ContactNumber2 + "</ContactNum3>";
+                request += "<ContactNum3><![CDATA[" + contact.ContactNumber2 + "]]></ContactNum3>";
             if (contact.ContactNumber4 != null)
-                request += "<ContactNum2>" + contact.ContactNumber2 + "</ContactNum4>";
+                request += "<ContactNum4><![CDATA[" + contact.ContactNumber2 + "]]></ContactNum4>";
             request += "<IsShared>" + (contact.IsShared ? "1" : "0") + "</IsShared>";
 
             XmlDocument xmlDoc = await client.PostXML(request);
