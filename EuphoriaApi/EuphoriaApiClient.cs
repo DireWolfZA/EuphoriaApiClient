@@ -60,7 +60,11 @@ namespace EuphoriaApi {
             var xmlDocument = new XmlDocument() {
                 PreserveWhitespace = false
             };
-            xmlDocument.LoadXml(rtn);
+            try {
+                xmlDocument.LoadXml(rtn);
+            } catch (XmlException ex) {
+                throw new XmlException($"{ex.Message} Invalid XML:{Environment.NewLine}{rtn}", ex, ex.LineNumber, ex.LinePosition);
+            }
             return xmlDocument;
         }
 
