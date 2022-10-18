@@ -8,6 +8,8 @@ namespace EuphoriaApi.Contacts {
         Task<List<Contact>> GetAsync(int pageSize, int startAt, string tmsUsername, string tmsPassword, string searchTerm = null);
         //https://apidocs.euphoria.co.za/Pages/PublicSection.aspx?CallName=AddContact&Section=Contacts
         Task<int> AddContact(string tmsUsername, string tmsPassword, Contact contact);
+        //https://apidocs.euphoria.co.za/Pages/PublicSection.aspx?CallName=DeleteContact&Section=Contacts
+        Task DeleteContact(string tmsUsername, string tmsPassword, string contactID);
     }
 
     class ContactActions : IContactActions {
@@ -84,6 +86,23 @@ namespace EuphoriaApi.Contacts {
             XmlNodeList childNodes = documentElement.ChildNodes;
             var childNodeID = childNodes[1];
             return int.Parse(childNodeID.InnerText.Trim());
+        }
+
+        public async Task DeleteContact(string tmsUsername, string tmsPassword, string contactID) {
+            string request = "<ActionName>DeleteContact</ActionName>" +
+                "<TmsUsername>" + tmsUsername + "</TmsUsername>" +
+                "<TmsPassword>" + tmsPassword + "</TmsPassword>" +
+                "<contactID>" + contactID + "</contactID>";
+
+            XmlDocument xmlDoc = await client.PostXML(request);
+            client.ThrowIfError(xmlDoc);
+
+            XmlNode documentElement = xmlDoc.DocumentElement;
+            XmlNodeList childNodes = documentElement.ChildNodes;
+            var childNodeRtnVal = childNodes[0];
+
+            if (childNodeRtnVal.InnerText.Trim() != "OK")
+                throw new XmlException(childNodeRtnVal.InnerText);
         }
     }
 }
