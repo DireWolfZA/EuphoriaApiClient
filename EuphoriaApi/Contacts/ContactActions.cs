@@ -5,7 +5,7 @@ using System.Xml;
 namespace EuphoriaApi.Contacts {
     public interface IContactActions {
         //https://apidocs.euphoria.co.za/Pages/PublicSection.aspx?CallName=GetContacts&Section=Contacts
-        Task<List<Contact>> GetAsync(int pageSize, int startAt, string tmsUsername, string tmsPassword, string searchTerm = null);
+        Task<List<Contact>> GetAsync(int pageSize, int startAt, string tmsUsername, string tmsPassword, string? searchTerm = null);
         //https://apidocs.euphoria.co.za/Pages/PublicSection.aspx?CallName=AddContact&Section=Contacts
         Task<int> AddContact(string tmsUsername, string tmsPassword, Contact contact);
         //https://apidocs.euphoria.co.za/Pages/PublicSection.aspx?CallName=DeleteContact&Section=Contacts
@@ -18,7 +18,7 @@ namespace EuphoriaApi.Contacts {
             this.client = client;
         }
 
-        public async Task<List<Contact>> GetAsync(int pageSize, int startAt, string tmsUsername, string tmsPassword, string searchTerm = null) {
+        public async Task<List<Contact>> GetAsync(int pageSize, int startAt, string tmsUsername, string tmsPassword, string? searchTerm = null) {
             string request = "<ActionName>GetContacts</ActionName>" +
                     "<pageSize>" + pageSize + "</pageSize>" +
                     "<startAt>" + startAt + "</startAt>" +
