@@ -12,7 +12,7 @@ namespace EuphoriaApi.Contacts {
         Task DeleteContact(string tmsUsername, string tmsPassword, string contactID);
     }
 
-    class ContactActions : IContactActions {
+    public class ContactActions : IContactActions {
         private readonly IEuphoriaApiClient client;
         public ContactActions(IEuphoriaApiClient client) {
             this.client = client;
