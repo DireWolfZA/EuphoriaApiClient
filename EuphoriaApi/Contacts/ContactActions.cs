@@ -31,9 +31,9 @@ namespace EuphoriaApi.Contacts {
             XmlDocument xmlDoc = await client.PostXML(request);
             client.ThrowIfError(xmlDoc);
 
-            return Convert(xmlDoc);
+            return convert(xmlDoc);
         }
-        private List<Contact> Convert(XmlDocument responseXML) {
+        private List<Contact> convert(XmlDocument responseXML) {
             var contacts = new List<Contact>();
 
             XmlNode documentElement = responseXML.DocumentElement;
@@ -53,7 +53,7 @@ namespace EuphoriaApi.Contacts {
                         ContactNumber4 = childNode.SelectSingleNode("ContactNum4").InnerText.Trim(),
                         DataSource = childNode.SelectSingleNode("dataSource").InnerText.Trim(),
                         DateUpdated = childNode.SelectSingleNode("DateUpdated").InnerText.Trim(),
-                        DateCreated = childNode.SelectSingleNode("DateCreated").InnerText.Trim()
+                        DateCreated = childNode.SelectSingleNode("DateCreated").InnerText.Trim(),
                     };
 
                     contacts.Add(contact);
@@ -74,9 +74,9 @@ namespace EuphoriaApi.Contacts {
             if (contact.ContactNumber2 != null)
                 request += "<ContactNum2><![CDATA[" + contact.ContactNumber2 + "]]></ContactNum2>";
             if (contact.ContactNumber3 != null)
-                request += "<ContactNum3><![CDATA[" + contact.ContactNumber2 + "]]></ContactNum3>";
+                request += "<ContactNum3><![CDATA[" + contact.ContactNumber3 + "]]></ContactNum3>";
             if (contact.ContactNumber4 != null)
-                request += "<ContactNum4><![CDATA[" + contact.ContactNumber2 + "]]></ContactNum4>";
+                request += "<ContactNum4><![CDATA[" + contact.ContactNumber4 + "]]></ContactNum4>";
             request += "<IsShared>" + (contact.IsShared ? "1" : "0") + "</IsShared>";
 
             XmlDocument xmlDoc = await client.PostXML(request);

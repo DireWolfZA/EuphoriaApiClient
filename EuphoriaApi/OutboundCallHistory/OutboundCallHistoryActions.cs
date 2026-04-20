@@ -39,10 +39,9 @@ namespace EuphoriaApi.OutboundCallHistory {
             XmlDocument xmlDoc = await client.PostXML(request);
             client.ThrowIfError(xmlDoc);
 
-            return Convert(xmlDoc);
+            return convert(xmlDoc);
         }
-
-        private List<OutboundCall> Convert(XmlDocument responseXML) {
+        private List<OutboundCall> convert(XmlDocument responseXML) {
             var outboundCalls = new List<OutboundCall>();
 
             XmlNode documentElement = responseXML.DocumentElement;
@@ -58,7 +57,7 @@ namespace EuphoriaApi.OutboundCallHistory {
                         StartTime = childNode.SelectSingleNode("StartTime").InnerText.Trim(),
                         Status = childNode.SelectSingleNode("Status").InnerText.Trim(),
                         StatusDescription = childNode.SelectSingleNode("StatusDescription").InnerText.Trim(),
-                        CallBill = childNode.SelectSingleNode("CallBill").InnerText.Trim()
+                        CallBill = childNode.SelectSingleNode("CallBill").InnerText.Trim(),
                     };
 
                     outboundCalls.Add(outboundCall);
