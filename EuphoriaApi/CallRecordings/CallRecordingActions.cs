@@ -15,6 +15,18 @@ namespace EuphoriaApi.CallRecordings {
         /// <param name="sortOrder">Sorting of calls - ASC or DESC</param>
         /// <param name="searchFilter">Search filter</param>
         Task<List<CallRecording>> GetAsync(int pageSize, int startAt, DateTime? startDate = null, DateTime? endDate = null, int? extension = null, string? sortOrder = null, string? searchFilter = null);
+
+        //https://apidocs.euphoria.co.za/Pages/PublicSection.aspx?CallName=DownloadCallRecordingByUniqueId&Section=Call%20Recordings
+        /// <summary>Returns the recorded WAV file. The WAV file audio stream will contain GSM codec compression. The file can be played back with most audio players</summary>
+        /// <param name="uniqueID">Unique ID of the call</param>
+        /// <returns>BASE64 encoded text block containing the WAV file (Already decoded to byte array)</returns>
+        Task<byte[]> DownloadByID(string uniqueID);
+
+        //https://apidocs.euphoria.co.za/Pages/PublicSection.aspx?CallName=DownloadCallRecordingByFilename&Section=Call%20Recordings
+        /// <summary>Returns the recorded WAV file. The WAV file audio stream will contain GSM codec compression. The file can be played back with most audio players.</summary>
+        /// <param name="filename">Name of call recording file</param>
+        /// <returns>BASE64 encoded text block containing the WAV file (Already decoded to byte array)</returns>
+        Task<byte[]> DownloadByFilename(string filename);
     }
 
     public class CallRecordingActions : ICallRecordingActions {
@@ -75,6 +87,30 @@ namespace EuphoriaApi.CallRecordings {
             }
 
             return callRecordings;
+        }
+
+        public async Task<byte[]> DownloadByID(string uniqueID) {
+            string request = "<ActionName>DownloadCallRecordingByUniqueId</ActionName>" +
+                "<uniqueId>" + uniqueID + "</uniqueId>";
+
+            XmlDocument xmlDoc = await client.PostXML(request);
+            client.ThrowIfError(xmlDoc);
+
+            XmlNode documentElement = xmlDoc.DocumentElement;
+            var officialAPIAudioData = documentElement.SelectSingleNode("CallRecording").SelectSingleNode("audioData").InnerText.Trim();
+            return Convert.FromBase64String(officialAPIAudioData);
+        }
+
+        public async Task<byte[]> DownloadByFilename(string filename) {
+            string request = "<ActionName>DownloadCallRecordingByFilename</ActionName>" +
+                "<FileName>" + filename + "</FileName>";
+
+            XmlDocument xmlDoc = await client.PostXML(request);
+            client.ThrowIfError(xmlDoc);
+
+            XmlNode documentElement = xmlDoc.DocumentElement;
+            var officialAPIAudioData = documentElement.SelectSingleNode("CallRecording").SelectSingleNode("audioData").InnerText.Trim();
+            return Convert.FromBase64String(officialAPIAudioData);
         }
     }
 }
