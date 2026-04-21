@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using System.Xml;
+using EuphoriaApi.CallRecordings;
 using EuphoriaApi.Contacts;
 using EuphoriaApi.OutboundCallHistory;
 
@@ -10,5 +11,6 @@ namespace EuphoriaApi {
 
         IOutboundCallHistoryActions OutboundCallHistory { get; }
         IContactActions Contacts { get; }
+        ICallRecordingActions CallRecordings { get; }
     }
 }
