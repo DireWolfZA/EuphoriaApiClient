@@ -4,13 +4,13 @@ using EuphoriaApi.CallRecordings;
 using EuphoriaApi.Contacts;
 using EuphoriaApi.OutboundCallHistory;
 
-namespace EuphoriaApi {
-    public interface IEuphoriaApiClient {
-        Task<XmlDocument> PostXML(string requestXml);
-        void ThrowIfError(XmlDocument xmlDocument);
+namespace EuphoriaApi;
 
-        IOutboundCallHistoryActions OutboundCallHistory { get; }
-        IContactActions Contacts { get; }
-        ICallRecordingActions CallRecordings { get; }
-    }
+public interface IEuphoriaApiClient {
+    Task<XmlDocument> PostXML(string requestXml);
+    void ThrowIfError(XmlDocument xmlDocument);
+
+    IOutboundCallHistoryActions OutboundCallHistory { get; }
+    IContactActions Contacts { get; }
+    ICallRecordingActions CallRecordings { get; }
 }
